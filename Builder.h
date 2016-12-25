@@ -39,6 +39,10 @@ public:
 			<< "Electric: " << elec->name << " " << elec->price << endl
 			<< "Electronic: " << electron->name << " " << electron->price << endl;
 	}
+	int price()
+	{
+		return mech->price + elec->price + electron->price;
+	}
 private:
 	Mechanic* mech;
 	Electric* elec;

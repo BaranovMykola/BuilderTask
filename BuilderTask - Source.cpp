@@ -1,15 +1,31 @@
 #include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <vector>
+#include <numeric>
+
 #include "Builder.h"
 
 using namespace std;
 
 void main()
 {
-	Director d(new AllBuilder("mech", "elec", "electron", 10, 20, 30));
-	for (int i = 0;i < 10;++i)
+	ifstream wash("washing.txt");
+	while (!wash.eof())
 	{
-		d.getWashinMachine()->show();
-		cout << endl;
+		string a, b, c;
+		int e, d, f;
+		wash >> a >> e >> b >> d >> c >> f;
+		AllBuilder br(a, b, c, d, e, f);
+		Director dr(&br);
+		int q;
+		wash >> q;
+		vector<WashinMachine*> data;
+		for (int i = 0;i < q;++i)
+		{
+			data.push_back(dr.getWashinMachine());
+		}
+		cout << accumulate(data.begin(), data.end(), 0, [](int a, WashinMachine* v) { return a + v->price(); }) << endl;
 	}
 	system("pause");
 }
