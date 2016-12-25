@@ -1,30 +1,84 @@
 #pragma once
 #include <string>
+#include <iostream>
 
 using namespace std;
 
 struct Mechanic
 {
-	Mechanic(string type) : mType(type) {}
-	string mType;
+	Mechanic(string _name, int _price) : name(_name), price(_price) {}
+	string name;
+	int price;
 };
 
 struct Electric
 {
-	Electric(string type) : mType(type) {}
-	string mType;
+	Electric(string _name, int _price) : name(_name), price(_price) {}
+	string name;
+	int price;
 };
 
 struct Electronic
 {
-	Electronic(string type) : mType(type) {}
-	string mType;
+	Electronic(string _name, int _price) : name(_name), price(_price) {}
+	string name;
+	int price;
 };
 
-class Builder
+class WashinMachine
 {
 public:
-	Builder();
-	~Builder();
+	WashinMachine(Mechanic* _mech, Electric* _elec, Electronic* _electron):
+		mech(_mech),
+		elec(_elec),
+		electron(_electron)
+	{ }
+private:
+	Mechanic* mech;
+	Electric* elec;
+	Electronic* electron;
 };
+
+class AllBuilder
+{
+public:
+	AllBuilder(string _mech, string _elec, string _electron, int _priceMech, int _priceElect, int _priceElectron):
+		mech(_mech), elec(_elec), electron(_electron),
+		priceMech(_priceMech), priceElec(_priceElect), priceElectron(_priceElectron)
+	{ }
+	virtual Mechanic* buildMech(){ return new Mechanic(mech, priceMech); }
+	virtual Electric* buildElec(){ return new Electric(elec, priceElec); }
+	virtual Electronic* buildElectron() { return new Electronic(electron, priceElectron); }
+private:
+	string mech;
+	string elec;
+	string electron;
+	int priceMech;
+	int priceElec;
+	int priceElectron;
+};
+
+class MicrowaveBuilder : public AllBuilder
+{
+public:
+	MicrowaveBuilder(string a, string b, string c, int e, int f, int g):
+		AllBuilder(a,b,c,e,f,g)
+	{ }
+	Electric* buildElec(string, int) { return nullptr; }
+};
+
+class Director
+{
+public:
+	Director(AllBuilder* _builder):
+		builder(_builder)
+	{ }
+	WashinMachine* getWashinMachine()
+	{
+		return new WashinMachine(builder->buildMech(), builder->buildElec, builder->buildElectron);
+	}
+private:
+	AllBuilder* builder;
+};
+
 
